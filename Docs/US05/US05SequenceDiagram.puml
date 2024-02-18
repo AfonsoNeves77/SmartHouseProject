@@ -1,0 +1,52 @@
+@startuml
+title User Story 5v2 - Main Success Scenario
+
+autonumber
+
+skinparam ParticipantPadding 50
+
+participant ":AddDeviceToRoomCTRL" as C
+participant ":CommonListOfRooms" as CLR
+participant ":RoomDTOMapper" as RM
+participant ":Room" as R
+participant ":ListOfDevices" as LD
+participant "device:Device" as D
+
+
+[o-> C : getListOfRooms()
+activate C
+C -> CLR** : <create>
+C -> CLR : roomList = getListOfRooms()
+C -> RM** : <create>
+C -> RM : getRoomDTOList(roomList)
+activate RM
+loop for each room in room list
+RM -> RM : roomDTO = domainToDTO(room)
+RM -> RM : add(RoomDTO)
+end loop
+RM --> C : roomDTOList
+deactivate RM
+[o<-- C : roomDTOList
+deactivate C
+
+
+[o-> C : addDeviceToRoom(roomDTO, deviceName, deviceModel)
+activate C
+C -> RM : <create>
+activate RM
+C -> RM : room = dtoToDomain(roomDTO, myHouse)
+deactivate RM
+C -> R : roomName = getRoomName()
+activate R
+C -> R : deviceListObj = getListOfDevices()
+deactivate R
+C -> LD : addDeviceToList(deviceName,deviceModel,roomName)
+activate LD
+LD -> D **: <create>
+LD -> LD : add(device)
+LD --> C : return 0
+deactivate LD
+[o<-- C : return 0
+deactivate C
+
+@enduml

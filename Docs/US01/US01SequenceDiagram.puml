@@ -1,0 +1,43 @@
+@startuml
+autonumber
+
+title User Story 1 - Main Success Scenario
+
+participant ":ConfigureLocationCTRL" as C
+participant "locationDTO : LocationDTO" as L
+participant ":House" as H
+participant "address : Address" as A
+participant "gps : GPS" as G
+
+skinparam ParticipantPadding 50
+
+
+
+[o-> C : configureLocation (locationDTO)
+activate C
+
+C -> L : doorReference = locationDTO.getDoorReference();
+activate L
+C -> L : buildingNumber = locationDTO.getBuildingNumber();
+C -> L : streetName = locationDTO.getStreetName();
+C -> L : city = locationDTO.getCity();
+C -> L : country = locationDTO.getCountry();
+C -> L : zipCode = locationDTO.getZipCode();
+C -> L : latitude = locationDTO.getLatitude();
+C -> L : longitude = locationDTO.getLongitude();
+deactivate L
+
+
+C -> H : configureLocation (doorReference, buildingNumber, \nstreetName, city, country, zipCode, latitude, longitude)
+activate H
+H -> A** : <creates>
+
+H -> G** : <creates>
+H --> C : return 0
+deactivate H
+
+[o<-- C : return 0
+deactivate C
+
+|||
+@endumll

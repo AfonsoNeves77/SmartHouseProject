@@ -1,0 +1,177 @@
+@startuml
+title <size: 30> Class Diagram
+class House {
+    - houseName: String
+    - gps : GPS
+    - address : Address
+    - listOfRooms : ListOfRooms
+    - sensorTypeList : sensorTypeList
+
+    + configureLocation(doorReference : String, buildingNumber : String, streetName : String, \ncity : String, country : String, zipCode : String, latitude : double, longitude : double) : int
+    - createAddress(doorReference : String, buildingNumber : String, streetName : String, \ncity : String, country : String, zipCode : String) : Address
+    - createGPS(latitude : double, longitude : double) : GPS
+    + getListOfRooms() : ListOfRooms
+    + getSensorTypeList() : SensorTypeList
+}
+
+class Address {
+     - doorReference : String
+     - buildingNumber : String
+     - streetName : String
+     - city : String
+     - country : String
+     - zipCode : String
+
+     + editAddress(address : Address) : int
+     - anyParamsNullOrEmpty(doorReference : String, buildingNumber : String, \nstreetName : String, city : String, country : String, zipCode : String) : boolean
+     + getDoorReference() : String
+     + getbuildingNumber() : String
+     + getStreetName() : String
+     + getCity() : String
+     + getCountry() : String
+     + getZipCode() : String
+}
+
+class GPS {
+    - latitude : double
+    - longitude : double
+
+    + editGPS(gps : GPS) : int
+    - areParamsValid(latitude : double, longitude : double) : boolean
+    + getLatitude() : double
+    + getLongitude() : double
+}
+
+class Room {
+    - roomName: String
+    - houseFloor : int
+    - dimensions : RoomDimensions
+    - deviceList : ListOfDevices
+
+    + setRoomDimensions(roomWidth : double, roomLength : double, \nroomHeight : double) : void
+    + extractEachDimension(dimensions : RoomDimensions) : double[]
+    + getRoomName(): String
+    + getHouseFloor(): int
+    + getDimensions() : RoomDimensions
+    + getListOfDevices() : ListOfDevices
+}
+
+class RoomDimensions{
+     - roomWidth : double
+     - roomLength : double
+     - roomHeight : double
+
+    - areDimensionsValid (roomWidth : double, roomLength : double, \nroomHeight : double) : boolean
+    + getRoomWidth() : double
+    + getRoomLength() : double
+    + getRoomHeight() : double
+}
+
+class ListOfRooms{
+    - roomList : ArrayList<Room>
+
+    - createRoom (roomName : String, houseFloor : int) : Room
+    + addRoomToList (roomName : String, houseFloor : int, roomWidth : double, \nroomLength : double, roomHeight : double) : int
+    - isRoomInList (roomName : String) : boolean
+    + getRoomList () : ArrayList<Room>
+}
+
+class Device {
+    - deviceName : String
+    - deviceModel : String
+    - deviceLocation : String
+    - status : boolean
+    - listOfSensors : ListOfSensors
+
+    + toggleDeviceStatus() : boolean
+    - isDeviceValue(deviceName : String) : boolean
+    + getDeviceName() : String
+    + getDeviceModel() : String
+    + getListOfSensors() : ListOfSensors
+}
+
+class ListOfDevices{
+    - deviceList : ArrayList<Device>
+
+    - createDevice(deviceName : String, deviceModel : String, \nlocation : String) : Device
+    + addDeviceToList(deviceName : String, deviceModel : String, \nlocation : String) : int
+    - isDeviceDuplicated((deviceName : String) : boolean
+    + getDeviceList() : ArrayList<Device>
+}
+
+class ListOfSensors{
+    - listOfSensors : ArrayList<Sensor>
+
+    - createSensor(sensorName : String, \nsensorType : SensorTypeOptions) : Sensor
+    + addSensorToDevice(sensorName : String, \nsensorType : SensorTypeOptions) : int
+    - isSensorInList(sensorName : String) : boolean
+    + getListOfSensors() : ArrayList<Sensor>
+}
+
+interface Sensor {
+}
+
+class SensorTypeList {
+    - sensorTypeList : ArrayList<String>
+
+    + addSensorTypeToList(sensorType : String) : int
+    - isSensorTypeAlreadyInTheList(inputSensorType : String) : boolean
+    - isSensorTypeAvailable(sensorType : String) : boolean
+}
+
+class HumiditySensor{
+    - sensorName : String
+    - TYPE : SensorTypeOptions
+    - reading : double
+    - log : ArrayList<String>
+
+    - isReadingValid(reading : double) : boolean
+    + continuousMeausure(reading : double) : void
+    - addToLog(reading : double) : void
+    + getLastReading() : String
+    + getName() : String
+    + getType() : SensorTypeOptions
+    + getLog() : ArrayList<String>
+}
+
+class TemperatureSensor{
+     - sensorName : String
+     - TYPE : SensorTypeOptions
+     - reading : double
+     - log : ArrayList<String>
+
+     - isReadingValid(reading : double) : boolean
+         + continuousMeausure(reading : double) : void
+         - addToLog(reading : double) : void
+         + getLastReading() : String
+         + getName() : String
+         + getType() : SensorTypeOptions
+         + getLog() : ArrayList<String>
+}
+
+enum SensorTypeOptions {
+    HUMIDITY
+    TEMPERATURE
+}
+
+House "1" -- "1" Address : > has
+House "1" -- "1" GPS : > has
+House "1" -- "1" ListOfRooms : > has
+House "1" -- "*" SensorTypeList : > has
+
+ListOfRooms "1" -- "*" Room : > has
+
+Room "1" -- "*" ListOfDevices : > has
+Room "1" -- "1" RoomDimensions : > has
+
+ListOfDevices "1" -- "*" Device : > has
+
+Device "1" -- "1" ListOfSensors : > can have
+Device "1" -- "*" Actuator : > can have
+
+ListOfSensors "1" -- "*" HumiditySensor : has
+ListOfSensors "1" -- "*" TemperatureSensor : has
+
+Actuator "*" -- "1" ActuatorType : > has
+
+@enduml

@@ -1,0 +1,58 @@
+@startuml
+
+autonumber
+title User Story 6 - Main Success Scenario
+
+participant ":GetListOfRoomsCTRL" as C
+participant ":CommonListOfRooms" as CLR
+participant ":RoomDTOMapper" as RDM
+participant ":CommonDeviceList" as CLD
+participant ":Room" as R
+participant ":ListOfDevices" as LD
+participant ":DeviceDTOMapper" as DDM
+
+
+[o-> C : getListOfRooms()
+activate C
+C -> CLR** : <create>
+C -> CLR : getListOfRooms()
+activate CLR
+CLR --> C : roomList
+deactivate CLR
+C -> RDM** : <create>
+C -> RDM : getRoomDTOList(roomList)
+activate RDM
+loop for each room in room list
+RDM -> RDM : RoomDTO = domainToDTO(room)
+RDM -> RDM : add(RoomDTO)
+end loop
+RDM --> C : roomDTOList
+deactivate RDM
+[o<-- C : roomDTOList
+deactivate C
+[o-> C : getListOfDevices(roomDTO)
+activate C
+C -> RDM : <create>
+activate RDM
+C -> RDM : room = dtoToDomain(roomDTO)
+deactivate RDM
+C -> CLD** : <create>
+C -> CLD : getListOfDevices(room)
+activate CLD
+CLD -> R : listOfDevicesObj = getListOfDevices()
+CLD -> LD : listOfDevices = getListOfDevices()
+deactivate LD
+CLD --> C : listOfDevices
+deactivate CLD
+C -> DDM : listOfDevices
+activate DDM
+loop for each device in device list
+DDM -> DDM : DeviceDTO = domainToDTO(device)
+DDM -> DDM : add(DeviceDTO)
+end loop
+DDM --> C : deviceDTOList
+deactivate DDM
+[o<-- C : deviceDTOList
+deactivate C
+
+@enduml

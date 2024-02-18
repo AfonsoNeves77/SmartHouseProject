@@ -1,0 +1,38 @@
+@startuml
+autonumber
+title User Story 3 - Main Success Scenario
+
+participant ":GetListOfRoomsCTRL" as C
+participant ":CommonListOfRooms" as CLR
+participant ":House" as H
+participant ":ListOfRooms" as LR
+participant ":RoomDTOMapper" as RDM
+
+[o-> C : getListOfRooms()
+activate C
+C -> CLR** : <create>
+C -> CLR : getListOfRooms()
+activate CLR
+CLR -> H : getListOfRooms()
+activate H
+H --> CLR : listOfRoomsObj
+deactivate H
+CLR -> LR : getRoomList()
+activate LR
+LR --> CLR : roomList
+deactivate LR
+CLR --> C : roomList
+deactivate CLR
+C -> RDM : getRoomDTOList(roomList)
+activate RDM
+loop for each room in room list
+RDM -> RDM : RoomDTO = domainToDTO(room)
+RDM -> RDM : add(RoomDTO)
+end loop
+RDM --> C : roomDTOList
+deactivate RDM
+[o<-- C : roomDTOList
+deactivate C
+
+@enduml
+

@@ -1,0 +1,28 @@
+@startuml
+title User Story 4 - Main Success Scenario
+
+autonumber
+participant ":DefineSensorTypeCTRL" as DST
+participant ":House" as H
+participant ":SensorTypeList" as ST
+skinparam ParticipantPadding 50
+
+[o-> DST : defineSensorType(sensorType)
+activate DST
+DST -> H : getSensorTypeList()
+activate H
+H --> DST : sensorTypeList
+deactivate H
+
+DST -> ST : addSensorTypeToList(sensorType)
+
+activate ST
+ST --> DST : return 0
+deactivate ST
+[o<-- DST : return 0
+
+deactivate DST
+
+
+
+@enduml
